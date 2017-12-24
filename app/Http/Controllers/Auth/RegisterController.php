@@ -75,7 +75,7 @@ class RegisterController extends Controller
             'NIF' => $data['NIF'],
             'contacto' => $data['contacto'],
             'cuentaSkype' => $data['cuentaSkype'],
-            'digital_sign' => $this->generateUuid(),
+            'digital_sign' => "e2ee3a89-f271-3011-8186-9848cd51f149",
         ]);
         $this->sendMail($user);
         return $user;
