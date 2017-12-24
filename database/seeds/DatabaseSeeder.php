@@ -12,19 +12,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-    	$admin = factory(App\User::class)->create([
-    		'role' => 0,
-    	]);
-        $adminReal User::create([
+        $faker = Faker\Factory::create();
+        $adminReal = User::create([
             'name' => 'Administrador',
             'email' => 'admin@admin.com',
             'password' => bcrypt('Token.01'),
             'NIF' => 'No se que es un NIF',
             'contacto' => 'Contacto',
             'cuentaSkype' => 'Cuenta de Skype',
-            'digital_sign' => $this->generateUuid(),
+            'digital_sign' => $faker->unique()->uuid,
             'role' => 0,
             'confirmed' => true,
+        ]);
+        $admin = factory(App\User::class)->create([
+            'role' => 0,
         ]);
         $devs = factory(App\User::class)->times(10)->create([
           'role' => 1,
@@ -38,15 +39,15 @@ class DatabaseSeeder extends Seeder
             if(random_int(0,100) >50 ){
                 factory(App\Dossier::class)
                 ->create( [
-                 'user_id' => $user->id,
-             ]);                
+                   'user_id' => $user->id,
+               ]);                
             }
 
             if(random_int(0,100) >50 ){
                 factory(App\adminSocialNetwork::class)
                 ->create( [
-                 'user_id' => $user->id,
-             ]);                
+                   'user_id' => $user->id,
+               ]);                
             }
             /*
             Crear valores de prueba que no esten asignados a proyectos
@@ -55,8 +56,8 @@ class DatabaseSeeder extends Seeder
             $dossiers = factory(App\Dossier::class)
             ->times(3)
             ->create( [
-             'user_id' => $user->id,
-         ]);
+               'user_id' => $user->id,
+           ]);
 
             $dossiers->each(function(App\Dossier $p) use($admin,$devs){
                 $proyect = factory(App\Proyect::class)
@@ -82,8 +83,8 @@ class DatabaseSeeder extends Seeder
             $ASN = factory(App\adminSocialNetwork::class)
             ->times(3)
             ->create( [
-             'user_id' => $user->id,
-         ]);
+               'user_id' => $user->id,
+           ]);
 
             $ASN->each(function(App\adminSocialNetwork $p) use ($admin,$devs){
                 $proyect = factory(App\Proyect::class)

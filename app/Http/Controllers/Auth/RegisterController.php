@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifiedMail;
 use Faker;
+
 class RegisterController extends Controller 
 {
     /*
