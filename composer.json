@@ -43,6 +43,7 @@
             "php artisan optimize"
         ],
         "compile": [
+            "php artisan migrate:reset",
             "php artisan migrate --force --seed",
             "php artisan storage:link"
         ]
