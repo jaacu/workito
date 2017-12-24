@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifiedMail;
-
+use Faker;
 class RegisterController extends Controller 
 {
     /*
@@ -75,10 +75,15 @@ class RegisterController extends Controller
             'NIF' => $data['NIF'],
             'contacto' => $data['contacto'],
             'cuentaSkype' => $data['cuentaSkype'],
-            'digital_sign' => Str::random(),
+            'digital_sign' => $this->generateUuid(),
         ]);
         $this->sendMail($user);
         return $user;
+    }
+
+    public function generateUuid(){
+        $faker = Faker\Factory::create();
+        return $faker->uuid;
     }
 
     public function sendMail(User $user){
