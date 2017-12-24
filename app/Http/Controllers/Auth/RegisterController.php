@@ -83,7 +83,7 @@ class RegisterController extends Controller
 
     public function generateUuid(){
         $faker = Faker\Factory::create();
-        return $faker->uuid;
+        return $faker->unique()->uuid;
     }
 
     public function sendMail(User $user){

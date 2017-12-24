@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,14 +15,25 @@ class DatabaseSeeder extends Seeder
     	$admin = factory(App\User::class)->create([
     		'role' => 0,
     	]);
-    	$devs = factory(App\User::class)->times(10)->create([
-    		'role' => 1,
-    	]);
-    	$clients = factory(App\User::class)->times(10)->create([
-    		'role' => 2,
-    	]);
+        $adminReal User::create([
+            'name' => 'Administrador',
+            'email' => 'admin@admin.com',
+            'password' => bcrypt('Token.01'),
+            'NIF' => 'No se que es un NIF',
+            'contacto' => 'Contacto',
+            'cuentaSkype' => 'Cuenta de Skype',
+            'digital_sign' => $this->generateUuid(),
+            'role' => 0,
+            'confirmed' => true,
+        ]);
+        $devs = factory(App\User::class)->times(10)->create([
+          'role' => 1,
+      ]);
+        $clients = factory(App\User::class)->times(10)->create([
+          'role' => 2,
+      ]);
 
-    	$clients->each(function(App\User $user) use ($admin,$devs){
+        $clients->each(function(App\User $user) use ($admin,$devs){
 
             if(random_int(0,100) >50 ){
                 factory(App\Dossier::class)
