@@ -39,7 +39,6 @@
             "php artisan optimize"
         ],
         "compile": [
-            "php artisan migrate --force"
         ]
     },
     "config": {
