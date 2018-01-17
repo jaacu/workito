@@ -2,15 +2,20 @@
 
 namespace App;
 
+use App\Custom;
+use App\Dossier;
+use App\adminSocialNetwork;
+use Carbon\Carbon;
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\adminSocialNetwork;
-use App\Dossier;
 
 class Proyect extends Model
 {
 	protected $guarded = [];
 	
+	public $proyectoTipo = 0;
+
 	public function user(){//El administrador que lo creo
 		return $this->belongsTo(User::class);
 		// return $this->belongsTo('App\Post');
@@ -38,30 +43,55 @@ class Proyect extends Model
 	}
 
 	public function actualDev(){
-		// Auth::user()-> $this->devs;
-		// if( )
-	}
-
-	public function encontrarDossier($id){
-		return Dossier::findOrFail($id);
-	}
-
-	public function encontrarAdminSN($id){
-		return adminSocialNetwork::findOrFail($id);
-	}
-
-	public function encontrar($type,$id){
-
-		switch ($type) {
-			case 0:
-			return $this->encontrarDossier($id);
-			break;
-			case 1:
-			return $this->encontrarAdminSN($id);
-			default:
-			return redirect('/home')->withErrors("El proyecto que intenta buscar no existe.");
-			break;
+		$devs = $this->devs;
+		foreach( $devs as $dev){
+			if($dev->user->id === Auth::user()->id){
+				return $dev;// Si esta
+				break;
+			}
 		}
+		return null;
+	}
+
+	public function encontrarDossier(){
+		return Dossier::findOrFail($this->proyect_id);
+	}
+
+	public function encontrarAdminSN(){
+		return adminSocialNetwork::findOrFail($this->proyect_id);
+	}
+
+	public function encontrarCustom(){
+		return Custom::findOrFail($this->proyect_id);
+	}
+	
+	public function isCustom(){
+		return ($this->proyect_type === 2);
+	}
+
+	public function encontrar(){
+		if($this->proyectoTipo === 0){
+			switch ($this->proyect_type) {
+				case 0:
+				$this->proyectoTipo = $this->encontrarDossier();
+				break;
+				case 1:
+				$this->proyectoTipo = $this->encontrarAdminSN();
+				break;
+				case 2://Custom
+				$this->proyectoTipo = $this->encontrarCustom();
+				break;
+				default:
+				abort(500);
+				return redirect('/home')->withErrors("El proyecto que intenta buscar no existe.");
+				break;
+			}
+			if( ! is_null($this->proyectoTipo) and ! $this->isCustom() ){
+				$this->proyectoTipo->load('user');
+			}
+		} 
+
+		return $this->proyectoTipo;
 		// $table = $this->type($type);
 		// $response = DB::table($type)->where([
 		// 	// ['proyect_type ', $type],
@@ -81,6 +111,34 @@ class Proyect extends Model
 			return 'dossiers';
 			break;
 		}
+	}
+
+	public function isTerminado(){
+		return $this->terminado;
+	}
+
+	public function isEditado(){
+		return ($this->created_at != $this->updated_at);
+	}
+
+	public function forHumansCreado(){
+		Carbon::setLocale('es');
+		$now = new Carbon();
+		$time = $this->carbonFormat($this->created_at);
+		$creado = Carbon::create($time[0],$time[1],$time[2],$time[3],$time[4],$time[5]);
+		return $creado->diffForHumans($now);
+	}
+
+	public function forHumansEditado(){
+		// Carbon::setLocale('es');
+		$now = new Carbon();
+		$time = $this->carbonFormat($this->updated_at);
+		$creado = Carbon::create($time[0],$time[1],$time[2],$time[3],$time[4],$time[5]);
+		return $creado->diffForHumans($now);
+	}
+
+	public function carbonFormat($string){
+		return preg_split("/[- :]/", $string);
 	}
 
 	// public function actualizar($time){

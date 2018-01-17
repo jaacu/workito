@@ -37,14 +37,18 @@ class HomeController extends Controller
         //     echo 'noooooooooooooooo';
         //     dd($variable);
         // } ;
-
         switch ( Auth::user()->role ) {
             case 0:// admin
-            return view("admin.home");
+            return view("admin.home", [
+                'users' => User::all(),
+                'proyects' =>Proyect::all(),
+            ]);
             break;
 
             case 1://Desarrollador
-            return view('dev.home');
+            return view('dev.home',[
+                'devs' => Auth::user()->devs,
+            ]);
             // return redirect()->back();
             break;
 

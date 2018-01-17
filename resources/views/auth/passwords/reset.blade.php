@@ -3,67 +3,55 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
+        <div class="col-sm-12 my-3">
+            <h4 class="text-capitalize text-center text-dark">Restablecer Contraseña</h4>
+        </div>
+        <div class="col-sm-12">
+            <form class="form-horizontal" method="POST" action="{{ route('password.request') }}">
+                {{ csrf_field() }}
+                <input type="hidden" name="token" value="{{ $token }}">
 
-                <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('password.request') }}">
-                        {{ csrf_field() }}
-
-                        <input type="hidden" name="token" value="{{ $token }}">
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                <div class="form-row">
+                    <div class="col-sm-5 text-center mx-auto"> 
+                        <label for="email" class="">Correo Electronico:</label>
+                        <input id="email" type="email" class="form-control @if( $errors->has('email')) is-invalid @endif" name="email" value="{{ old('email') }}" required autofocus>
+                        @foreach($errors->get('email') as $error)
+                        <div class="invalid-feedback">
+                            <strong> {{ $error }}</strong>
                         </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-
-                                @if ($errors->has('password_confirmation'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Reset Password
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+                <div class="form-row">
+                    <div class="col-sm-5 text-center mx-auto"> 
+                        <label for="password" class="">Contraseña:</label>
+                        <input id="password" type="password" class="form-control @if( $errors->has('password')) is-invalid @endif" name="password" required>
+                        @foreach($errors->get('password') as $error)
+                        <div class="invalid-feedback">
+                            <strong> {{ $error }}</strong>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-5 text-center mx-auto"> 
+                        <label for="password-confirm" class="">Confirmar Contraseña:</label>
+                        <input id="password-confirm" type="password" class="form-control @if( $errors->has('password_confirmation')) is-invalid @endif" name="password_confirmation" required>
+                        @foreach($errors->get('password_confirmation') as $error)
+                        <div class="invalid-feedback">
+                            <strong> {{ $error }}</strong>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="form-row my-3">
+                    <div class="col-md-5 mx-auto">
+                        <button type="submit" class="btn btn-primary">
+                            Restablecer Contraseña
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

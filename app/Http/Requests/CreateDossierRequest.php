@@ -24,7 +24,7 @@ class CreateDossierRequest extends FormRequest
     public function rules()
     {
         return [
-            'Nombre' =>['required'],
+            'nombre' =>['required'],
             'queEs' => ['required'],
             'publico' => ['required'],
             'mision' => ['required'],
@@ -40,7 +40,7 @@ class CreateDossierRequest extends FormRequest
     public function messages()
     {
         return [
-            'Nombre.required' =>'Por favor llena este campo.',
+            'nombre.required' =>'Por favor llena este campo.',
             'queEs.required' =>'Por favor llena este campo.',
             'publico.required' =>'Por favor llena este campo.',
             'mision.required' =>'Por favor llena este campo.',

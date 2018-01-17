@@ -8,41 +8,83 @@ use Auth;
 use App\User;
 use App\Dossier;
 use App\adminSocialNetwork;
+use App\Custom;
 use App\Proyect;
+use Faker;
 
 class AdminController extends Controller
 {
 	public function users(){
-		$clients = DB::table('users')->where('role', '=', 2)->get();
-		$devs = DB::table('users')->where('role', '=', 1)->get();
-		$admins = DB::table('users')->where([
-			['role', 0],
-			['id', '!=', Auth::user()->id],
-		])->get();
+		// abort(403);
+		$users = User::all()->except(['id' => Auth::user()->id])->sortBy('created_at')->sortBy('role');
 		return view('admin.users',[
-			'devs' => $devs,
-			'clients' => $clients,
-			'admins' => $admins
+			'users' => $users,
 		]);
 	}
 
+	public function buscarUsuario(Request $request){
+		$query = $request->input('query');
+
+		$usuarios = User::where('name', 'LIKE' , "%$query%")->get()->sortBy('created_at')->sortBy('role');
+		$url = '/admin/users';
+		return view('searchIndex',[
+			'data' =>$usuarios,
+			'url' =>$url,
+		]);
+	}
 	public function user($id){
 		$user = User::findOrFail($id);
 		if($user->id == Auth::user()->id){
 			return redirect('/user/perfil');
 		} else {
 			if( !Auth::user()->isAdmin() ){
+				abort(403);
 				return redirect('/home')->withErrors('NO TIENES LOS PERMISOS NECESARIOS PARA REALIZAR ESA ACCION.');
 			}
+			$user->load('proyects','devs');
 			return view('user.show',[
 				'user' => $user,
 			]);
 		}
 	}
 
+	public function crearUser(){
+		return view('admin.crearUser');
+	}
+
+	public function createUser(Request $request){
+		$this->validate($request, [
+			'name' => 'required|string|max:255',
+			'email' => 'required|string|email|max:255|unique:users',
+			'password' => 'required|string|min:6',
+			'NIF' => 'required|max:255',
+			'contacto' => 'required|max:255',
+			'cuentaSkype' => 'required|max:255',
+			'role' => 'required|numeric'
+		]);
+
+		$nuevoUsuario = User::create([
+			'name' => $request->input('name'),
+			'email' => $request->input('email'),
+			'password' => bcrypt($request->input('password')),
+			'NIF' => $request->input('NIF'),
+			'contacto' => $request->input('contacto'),
+			'cuentaSkype' => $request->input('cuentaSkype'),
+			'digital_sign' => $this->generateUuid(),
+			'confirmed' => true,
+			'role' => $request->input('role'),
+		]);
+		return redirect(route('user',$nuevoUsuario->id))->withSuccess('Nuevo usuario creado con exito!');
+	}
+
+	public function generateUuid(){
+		$faker = Faker\Factory::create();
+		return $faker->unique()->uuid;
+	}
+
 	public function editar($id){
 		$user = User::findOrFail($id);
-		if($user->id == Auth::user()->id){
+		if($user->id == Auth::user()->id or $user->isAdmin()){
 			return redirect()->back();
 		} else {
 			return view('user.upgrade',[
@@ -52,47 +94,76 @@ class AdminController extends Controller
 	}
 
 	public function edit(Request $request,$id){
-		$this->validate($request,[
-			'role' => 'required|numeric',
-		]);
+		$rules = array();
+		$rules = [
+			'name' => 'required|string|max:255',
+			// 'email' => 'required|string|email|max:255|unique:users',
+			// 'password' => 'required|string|min:6',
+			'NIF' => 'required|max:255',
+			'contacto' => 'required|max:255',
+			'cuentaSkype' => 'required|max:255',
+			'role' => 'required|numeric'
+		];
+
+		if(!  is_null( $request->input('password') ) ){
+			$rules['password']='string|min:6';
+		}
+
 		$user = User::findOrFail($id);
+
+		if( $user->email != $request->input('email') ){
+			$rules['email']='required|string|email|max:255|unique:users';
+		} else {
+			$rules['email']='required|string|email|max:255';
+		}
+
+		// dd( $rules );
+		$this->validate($request, $rules);
 		if( $user->id == Auth::user()->id){
 			return redirect('/home')->withErrors('No puedes hacer eso.');
 		}
-		if($user->role == $request->input('role') ){
-			return redirect()->back()->withErrors('Selecciona un rol diferente.');
-		} 
-		$name = $user->name;
-		$email = $user->email;
-		$password = $user->password;
-		$NIF = $user->NIF;
-		$contacto = $user->contacto;
-		$cuentaSkype = $user->cuentaSkype;
-		$digital_sign = $user->digital_sign;
 
-		$user->delete();
+		if($user->role == $request->input('role') and is_null( $request->input('password') ) ){	
+			$user->name = $request->input('name');
+			$user->email = $request->input('email');
+			$user->NIF = $request->input('NIF');
+			$user->contacto = $request->input('contacto');
+			$user->cuentaSkype = $request->input('cuentaSkype');
+			$user->save();
+			return redirect('/home')->withSuccess('Cambios realizados en el usuario '.$user->name.' realizados con exito.');
+		} else {
+			$name = $request->input('name');
+			$email = $request->input('email');
+			$NIF = $request->input('NIF');
+			$contacto = $request->input('contacto');
+			$cuentaSkype = $request->input('cuentaSkype');
+			$digital_sign = $user->digital_sign;
+			if( $user->role != $request->input('role') ){
+				$role = $request->input('role');
+			} else {
+				$role = $user->role;
+			}
 
-		$nuevoUsuario = User::create([
-			'name' => $name,
-			'email' => $email,
-			'password' => $password,
-			'NIF' => $NIF,
-			'contacto' => $contacto,
-			'cuentaSkype' => $cuentaSkype,
-			'digital_sign' => $digital_sign,
-			'confirmed' => true,
-			'role' => $request->input('role'),
-		]);
+			if ( ! is_null( $request->input('password') ) ) {
+				$password = bcrypt($request->input('password'));			
+			} else {
+				$password = $user->password;
+			}
+			$user->delete();
 
-		// dd($nuevoUsuario);
-		// $user->role = $request ->input('role',$user->role);
-		// if($request ->input('role') == 1 or $request ->input('role') == 0){
-		// 	$user->confirmed=true;
-		// }
-
-		// $user->save();
-
-		return redirect('/home')->withSuccess('Cambio de rol en el usuario '.$user->name.' realizado con exito.');
+			$nuevoUsuario = User::create([
+				'name' => $name,
+				'email' => $email,
+				'password' => $password,
+				'NIF' => $NIF,
+				'contacto' => $contacto,
+				'cuentaSkype' => $cuentaSkype,
+				'digital_sign' => $digital_sign,
+				'confirmed' => true,
+				'role' => $role,
+			]);
+			return redirect('/home')->withSuccess('Cambios realizados en el usuario '.$nuevoUsuario->name.' realizados con exito.');
+		}
 	}
 
 	public function eliminar($id){
@@ -110,7 +181,7 @@ class AdminController extends Controller
 	public function delete($id, Request $request){
 
 		$this->validate($request,[
-			'aceptar' => 'required',
+			'aceptar' => 'required|boolean',
 		]);
 
 		if($request->input('aceptar')){
@@ -149,29 +220,28 @@ class AdminController extends Controller
 	}
 
 
-	public function proyectos(){
-		$dossiers = Dossier::all()->sortByDesc('updated_at');
-		$AdmSN = adminSocialNetwork::all()->sortByDesc('updated_at');
-		$proyects = Proyect::all()->sortByDesc('updated_at');
-		//dd($dossiers);
+	public function proyectos()
+	{
+		$dossiers = Dossier::all();
+		$AdmSN = adminSocialNetwork::all();
+		$customs = Custom::all();
+		$proyecto = $dossiers->concat($customs)->concat($AdmSN)->sortByDesc('updated_at');
 		return view('admin.proyectos',[
-			'dossiers' => $dossiers,
-			'AdmSN' => $AdmSN,
-			'proyects' => $proyects, 
+			'proyectos' => $proyecto, 
 		]);
 	}
 
 	public function asignar( $type , $id ){
 		if( $type < 0  && $type >1 )
 			return redirect()->back();
-		$proyecto = DB::table('proyects')->where([
+		$proyecto = Proyect::where([
 			['proyect_type', $type],
 			['proyect_id', $id],
 		])->first();
 		// $reasignar = ''
 		if(! is_null($proyecto) )
 			return redirect('/proyecto/reasignar/'.$proyecto->id);
-		$devs = DB::table('users')->where('role', '=', 1)->get();
+		$devs = User::where('role', '=', 1)->get();
 		return view('admin.asignar',[
 			'devs' => $devs,
 			'type' => $type,
@@ -182,7 +252,7 @@ class AdminController extends Controller
 	public function reasignar( $id ){
 		$proyect = Proyect::findOrFail($id);
 
-		$devs = DB::table('users')->where('role', '=', 1)->get();
+		$devs = User::where('role', '=', 1)->get();
 
 		return view('admin.reasignar',[
 			'proyecto' => $proyect,

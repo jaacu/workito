@@ -1,8 +1,12 @@
 @forelse($errors->all() as $error)
 @if( $loop->first)
-<h3 style="color: red;" >Errores: </h3>
+<div class="alert alert-danger" role="alert">
+	<h3 class="alert-heading ml-2">Parece ser que hay algunos errores!</h3>
+	@endif
+	<p>{{ $error}}</p>
+	@if( $loop->last)
+</div>
 @endif
-<p style="color: red;">{{ $error}}</p>
 @empty
-<h4 style="color: blue;">No hay errores.</h4>
+{{-- <h4 style="color: blue;">No hay errores.</h4> --}}
 @endforelse

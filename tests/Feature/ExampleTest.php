@@ -16,8 +16,25 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
+        //Arrange | Preparacion
+        //Puede tenerla
+
+        //Act | Accion
+        //Tiene que tenerla
+
+        // Assert | Verificacion
+        //Una o mas verificaciones
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
+        // $response->assertSee('Leanga');
     }
+
+    // public function testPrueba()
+    // {
+    //     $response = $this->get('/admin/users');
+
+    //     $response->assertSee('admin');
+
+    // }
 }

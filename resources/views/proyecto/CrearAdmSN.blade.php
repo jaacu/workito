@@ -2,65 +2,130 @@
 
 @section('content')
 
-<div>
-	<h1>Crear Nuevo Proyecto De Administracion De Redes Sociales</h1>
-	<form action="/proyecto/create/AdmSN" method="POST">
-		<div class="form-group">
-			@if( $errors->has('facebook')  and $errors->has('twitter') and $errors->has('instagram') )
-			<div style="color: red;">Por favor seleccione al menos una red social.</div>
-			@endif
-			<p>Nombre de la empresa o persona: </p>
-			<input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}" autofocus="autofocus" >
-			@if( $errors->has('nombre') )
-			@foreach($errors->get('nombre') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-			<p>Facebook: </p>
-			<input type="checkbox" name="facebook" class="form-control" value="true">
-			<p>Facebook Permisos de Compra: </p>
-			<input type="text" name="fbPermisosCompra" class="form-control" value="{{ old('fbPermisosCompra') }}">
-			@if( $errors->has('fbPermisosCompra') )
-			@foreach($errors->get('fbPermisosCompra') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-			<p>twitter: </p>
-			<input type="checkbox" name="twitter" class="form-control" value="true">
-			<p>Email de Twitter: </p>
-			<input type="email" name="twEmail" class="form-control" value="{{ old('twEmail') }}">
-			@if( $errors->has('twEmail') )
-			@foreach($errors->get('twEmail') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-			<p>Password de Twitter: </p>
-			<input type="text" name="twPassword" class="form-control" value="{{ old('twPassword') }}">
-			@if( $errors->has('twPassword') )
-			@foreach($errors->get('twPassword') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-			<p>Instagram: </p>
-			<input type="checkbox" name="instagram" class="form-control" value="true">
-			<p>Email de Instagram: </p>
-			<input type="email" name="instEmail" class="form-control" value="{{ old('instEmail') }}">
-			@if( $errors->has('instEmail') )
-			@foreach($errors->get('instEmail') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-			<p>Password de Instagram: </p>
-			<input type="text" name="instPassword" class="form-control" value="{{ old('instPassword') }}">
-			@if( $errors->has('instPassword') )
-			@foreach($errors->get('instPassword') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-			{{csrf_field()}}
-			<input type="submit" value="Guardar" >
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 my-2">
+			<h1 class=" text-capitalize text-info">Administracion de Redes Sociales</h1>
 		</div>
+		<div class="col-sm-12 my-2">
+			@if( $errors->has('facebook')  and $errors->has('twitter') and $errors->has('instagram') )
+			<div class="alert-danger alert">
+				Por favor seleccione al menos una red social.
+			</div>
+			@endif
+			<div class="">
+				<form action="{{ route('proyecto.adminSocialNetworks.create') }}" method="POST">
+					{{csrf_field()}}
+					<div class="form-row">
+						<div class="col-sm-8 text-center mx-auto"> 
+							<label for="nombre" class="">Nombre de la empresa o persona:</label>
+							<input id="nombre" type="text" class="form-control @if( $errors->has('nombre')) is-invalid @endif" name="nombre" value="{{ old('nombre') }}" required autofocus>
+							@foreach($errors->get('nombre') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+					<div class="border rounded border-secondary my-2 p-2">
+						<div class="form-row">
+							<div class="col-sm-8 text-center mx-auto"> 
+								<div class="form-check mt-2">
+									<label for="facebook" class="form-check-label " > {{-- <a href="" data-toggle="collapse" href="#facebookBox" role="button" aria-expanded="false" aria-controls="facebookBox"></a> --}}Facebook:</label>
+									<input id="facebook" type="checkbox" value="1" class="form-check-input ml-3" name="facebook" @if( old('facebook')) checked @endif>
+								</div>
+							</div>
+						</div>
+						<div class="" id="facebookBox">
+							<div class="form-row m-3 p-3">
+								<div class="col-sm-12 text-center"> 
+									<label for="fbPermisosCompra" class="">Facebook Permisos de Compra:</label>
+									<input id="fbPermisosCompra" type="text" class=" text-center form-control @if( $errors->has('fbPermisosCompra')) is-invalid @endif" name="fbPermisosCompra" value="{{ old('fbPermisosCompra') }}" required>
+									@foreach($errors->get('fbPermisosCompra') as $error)
+									<div class="invalid-feedback">
+										<strong> {{ $error }}</strong>
+									</div>
+									@endforeach
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="border rounded border-secondary my-2 p-2">
+						<div class="form-row">
+							<div class="col-sm-8 text-center mx-auto"> 
+								<div class="form-check mt-2">
+									<label for="twitter" class="form-check-label " >Twitter:</label>
+									<input id="twitter" type="checkbox" value="1" class="form-check-input ml-3 text-center" name="twitter" @if( old('twitter')) checked @endif>
+								</div>
+							</div>
+						</div>
 
-	</form>
+						<div class="form-row m-3 p-2">
+							<div class="col-sm-6 text-center"> 
+								<label for="twEmail" class="">Email de Twitter:</label>
+								<input id="twEmail" type="email" class="text-center form-control @if( $errors->has('twEmail')) is-invalid @endif" name="twEmail" value="{{ old('twEmail') }}" >
+								@foreach($errors->get('twEmail') as $error)
+								<div class="invalid-feedback">
+									<strong> {{ $error }}</strong>
+								</div>
+								@endforeach
+							</div>
+
+							<div class="col-sm-6 text-center"> 
+								<label for="twPassword" class="">Contraseña de Twitter:</label>
+								<input id="twPassword" type="text" class="text-center form-control @if( $errors->has('twPassword')) is-invalid @endif" name="twPassword" value="{{ old('twPassword') }}" >
+								@foreach($errors->get('twPassword') as $error)
+								<div class="invalid-feedback">
+									<strong> {{ $error }}</strong>
+								</div>
+								@endforeach
+							</div>
+						</div>
+					</div>
+					
+					<div class="border rounded border-secondary my-2 p-2">
+						<div class="form-row">
+							<div class="col-sm-8 text-center mx-auto"> 
+								<div class="form-check mt-2">
+									<label for="instagram" class="form-check-label " >Instagram:</label>
+									<input id="instagram" type="checkbox" value="1" class="form-check-input ml-3" name="instagram" @if( old('instagram')) checked @endif>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-row m-3 p-2">
+							<div class="col-sm-6 text-center"> 
+								<label for="instEmail" class="">Email de Instagram:</label>
+								<input id="instEmail" type="email" class="text-center form-control @if( $errors->has('instEmail')) is-invalid @endif" name="instEmail" value="{{ old('instEmail') }}" >
+								@foreach($errors->get('instEmail') as $error)
+								<div class="invalid-feedback">
+									<strong> {{ $error }}</strong>
+								</div>
+								@endforeach
+							</div>
+
+							<div class="col-sm-6 text-center"> 
+								<label for="instPassword" class="">Contraseña de Twitter:</label>
+								<input id="instPassword" type="text" class=" text-center form-control @if( $errors->has('instPassword')) is-invalid @endif" name="instPassword" value="{{ old('instPassword') }}" >
+								@foreach($errors->get('instPassword') as $error)
+								<div class="invalid-feedback">
+									<strong> {{ $error }}</strong>
+								</div>
+								@endforeach
+							</div>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="col-sm-12 mt-4 ">
+							<button class="btn-primary btn btn-lg" type="submit"> 
+								Crear.
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 @endsection

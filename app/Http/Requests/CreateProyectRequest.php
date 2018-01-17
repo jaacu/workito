@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Auth;
 
 class CreateProyectRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class CreateProyectRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->isAdmin();
     }
 
     /**
@@ -26,11 +27,11 @@ class CreateProyectRequest extends FormRequest
         $hoy = date("Y-m-d H:i:s");
         return [
             'name' => ['required','max:20','min:4'],
-            // 'fecha_limite' => ['sometimes',"date","after:$hoy"],
-            'restante' => [''],
+            'fecha_limite' => ['required',"date","after:$hoy"],
             'dev' => ['required','exists:users,id'],
             'type' => ['required','numeric'],
             'id' => ['required','numeric'],
+            'descripcion' => ['sometimes','required','max:500'],
         ];
     }
     public function messages()
@@ -43,6 +44,8 @@ class CreateProyectRequest extends FormRequest
         'dev.required' => 'Debes ingresar un desarrollador.',
         'dev.numeric' => 'Debe tener un valor numerico.',
         'dev.exists' => 'El desarrollador ingresado debe estar registrado.',
+        'descripcion.required' => 'Este campo es requerido.',
+        'descripcion.max' => 'Maximo 500 caracteres.',
         // 'type.numeric' => '',
         // 'type.required' => '',
         // 'id.numeric' => '',

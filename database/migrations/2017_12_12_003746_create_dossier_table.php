@@ -17,7 +17,7 @@ class CreateDossierTable extends Migration
             $table->increments('id');
             $table->timestamps();
 
-            $table->string('Nombre');
+            $table->string('nombre');
             $table->string('queEs');
             $table->string('publico');
             $table->string('mision');

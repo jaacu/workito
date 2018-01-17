@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
-class VerifiedMail extends Mailable
+class VerifiedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -31,6 +31,7 @@ class VerifiedMail extends Mailable
     public function build()
     {
         return $this->from('laravel@prueba.com')
+        ->subject('Bienvenido a Leanga Software')
         ->view('emails.verificationCode')
         ->with([
             'name' => $this->user->name,

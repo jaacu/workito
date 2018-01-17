@@ -8,147 +8,70 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Leanga</title>
-
+    <title>{{env('APP_NAME','Workito')}}</title>
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
+    <link href="{{ mix('css/app.css' ) }}" rel="stylesheet">
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --}}
 
-    <style>
-    html, body {
-        background-color: #fff;
-        color: #636b6f;
-        font-family: 'Raleway', sans-serif;
-        font-weight: 100;
-        height: 100vh;
-        margin: 0;
-    }
-
-    .full-height {
-        height: 100vh;
-    }
-
-    .flex-center {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-    }
-
-    .position-ref {
-        position: relative;
-    }
-
-    .top-right {
-        position: absolute;
-        right: 10px;
-        top: 18px;
-    }
-
-    .content {
-        text-align: center;
-    }
-
-    .title {
-        font-size: 84px;
-    }
-
-    .links > a {
-        color: #636b6f;
-        padding: 0 25px;
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: .1rem;
-        text-decoration: none;
-        text-transform: uppercase;
-    }
-
-    .m-b-md {
-        margin-bottom: 30px;
-    }
-</style>
-<script
-src="https://code.jquery.com/jquery-3.2.1.js"
-integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-crossorigin="anonymous"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-
+    {{-- <link href="{{ mix('css/all.css') }}" rel="stylesheet"> --}}
+    {{-- <script src="{{ mix('js/all.js') }}"></script> --}}
 </head>
 <body>
     <div id="app" class="container">
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
+        <nav class="navbar navbar-toggleable-md sticky-top">
+            <a class=" navbar-brand mb-0 h1" @if(Auth::guest() ) href="{{ route('inicio') }}" @else href="{{ route('home') }}" @endif> {{env('APP_NAME','Workito')}}</a>
+            @if (Auth::guest())        
+            <a class="  h4 nav-item nav-link" href="{{ route('login') }}">Inicar Sesión</a>
+            <a class=" h4 nav-item nav-link" href="{{ route('register') }}">Registrarse</a>
+            @else
+            <button class="btn btn-outline-dark navbar-toggler navbar-toggler-right text-capitalize" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                {{ Auth::user()->name }} <span class="caret"></span>
+            </button>
+            <div class="collapse navbar-collapse text-center bg-light" id="navbarSupportedContent" style="">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item ">
+                        <div>
+                            <a class="dropdown-item" href="/user/perfil">Mi perfil</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                            onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+                            @lang('Logout')
+                        </a>
 
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        Leanga
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    </div>
+                </li>
+                @if( Auth::user()->isAdmin() or Auth::user()->isDeveloper() )
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Notificaciones <span class="caret"></span>
                     </a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
-                        @if (Auth::guest())
-                        <li><a href="{{ route('login') }}">Login</a></li>
-                        <li><a href="{{ route('register') }}">Register</a></li>
-                        @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                            <li>
-                                <a href="/user/perfil">Mi perfil</a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endif
-                </ul>
-            </div>
+                    <notifications :user="{{ Auth::user()->id }}"></notifications>
+                </li>
+                @endif
+            </ul>
+            @endif
         </div>
     </nav>
 
     @if (session('success'))
-    <div style="color: green;">
+    <div class="alert alert-success">
         {{ session('success') }}
     </div>
-    @endif
-    
+    @endif 
     @yield('content')
-    
-</div>
+    <br> <br> <br>
 
-<!-- Scripts -->
-<script src="{{ asset('js/app.js') }}"></script>
+
+</div>
+{{-- <script> 
+    alert('pene')
+</script> --}}
+<script src="{{ mix('js/app.js') }}"></script>
+{{-- {{dd(App\Http\Controllers\DeveloperController::devsScript())}} --}}
+@includeWhen( App\Http\Controllers\DeveloperController::devsScript() , 'dev.script' )
 </body>
 </html>

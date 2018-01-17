@@ -18,7 +18,7 @@ class Users
         if( $request->user()->isConfirmed() ){
             return $next($request);
         } else {
-            return redirect('/home')->withErrors("Servicio valido solo para usuarios verificados.");
+            return redirect(route('home'))->withErrors("Servicio disponible solo para usuarios verificados.");
         }
 
     }

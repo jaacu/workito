@@ -57,7 +57,7 @@ $factory->define(App\Comment::class, function (Faker\Generator $faker) {
 //Proyectos de cliente
 $factory->define(App\Dossier::class, function (Faker\Generator $faker) {
 	return [
-		'Nombre' => $faker->company,
+		'nombre' => $faker->company,
 		'queEs' => $faker->words(random_int(3, 10), true),
 		'publico' => $faker->words(random_int(3, 10), true),
 		'mision' => $faker->words(random_int(3, 10), true),

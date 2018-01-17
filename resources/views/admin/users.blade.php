@@ -1,40 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<h3>Todos los usuarios: </h3>
-
-@if( $clients->count() or $devs->count() or $admins->count() )
-
-@if( $admins->count() )
-<p>Otros administradores: </p>
-@foreach( $admins as $admin)
-<p> Nombre del administrador: {{ $admin->name}}</p>
-@endforeach
-@endif
-
-@if( $devs->count() )
-<p>Desarrolladores registrados: </p>
-@foreach( $devs as $dev)
-{{-- <div class="col-xs-@php echo random_int(1,12); @endphp"> --}}
-	<div class="col-xs-4" style="padding:20px;color;white;border-radius:3px;margin:10px">
-		<p  > Nombre del desarrollador: {{ $dev->name}}</p>
-		<p><a href="/user/{{$dev->id}}">Detalles.</a></p>	
+<div class="container mt-3">
+	@forelse($users as $user)
+	@if($loop->first)
+	<div class="row">
+		<div class="col-sm-6">
+			<h3 class="text-dark text-center">Usuarios</h3>
+		</div>
+		<div class="col-sm-6">
+			@include('searchBar', ['action' =>route('admin.buscar.user')])
+		</div>
 	</div>
-
-	@endforeach
-	@endif
-
-	@if( $clients->count() )
-	<p>Clientes registrados: </p>
-	@foreach( $clients as $client)
-	<p> Nombre del cliente: {{ $client->name}}</p>
-	<p><a href="/user/{{$client->id}}">Detalles.</a></p>
-	@endforeach
-	@endif
-
-	@else
-	<div>
-		Parece que hay usuarios registrados.
+	<hr class="mt-3 mb-3">
+	<div class="row">
+		@endif
+		@include('user.userMIN')
+		@if($loop->last)
 	</div>
 	@endif
-	@endsection
+	@empty
+	<div class="row">
+		<div class="col-sm-12 alert alert-warning">
+			<h4 class="alert-heading">Parece que no hay ningun usuario registrado!</h4>
+			<hr>
+			<a href="{{ route('user.crear.admin') }}" class="btn btn-primary">Crear un nuevo usuario ahora.</a>
+		</div>
+	</div>
+	@endforelse
+</div>
+
+@endsection

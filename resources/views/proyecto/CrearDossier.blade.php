@@ -1,103 +1,165 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div>
-	<h1>Crear Nuevo Dossier</h1>
-	<form action="/proyecto/create/dossier" method="POST">
-		<div class="form-group">
-			<p>Nombre de la empresa: </p>
-			<input type="text" name="Nombre" class="form-control" value="{{ old('Nombre') }}" autofocus="autofocus" >
-			@if( $errors->has('Nombre') )
-			@foreach($errors->get('Nombre') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-			
-			<p>Descripcion de la empresa: </p>
-			<input type="text" name="queEs" class="form-control" value="{{ old('queEs') }}">
-			@if( $errors->has('queEs') )
-			@foreach($errors->get('queEs') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Hacia que publico va dirigido? </p>
-			<input type="text" name="publico" class="form-control" value="{{ old('publico') }}">
-			@if( $errors->has('publico') )
-			@foreach($errors->get('publico') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Mision de la empresa: </p>
-			<input type="text" name="mision" class="form-control" value="{{ old('mision') }}">
-			@if( $errors->has('mision') )
-			@foreach($errors->get('mision') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Vision de la empresa: </p>
-			<input type="text" name="vision" class="form-control" value="{{ old('vision') }}">
-			@if( $errors->has('vision') )
-			@foreach($errors->get('vision') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Valores de la empresa: </p>
-			<input type="text" name="valores" class="form-control" value="{{ old('valores') }}">
-			@if( $errors->has('valores') )
-			@foreach($errors->get('valores') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Que servicios ofrece la empresa? </p>
-			<input type="text" name="servicios" class="form-control" value="{{ old('servicios') }}">
-			@if( $errors->has('servicios') )
-			@foreach($errors->get('servicios') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Cuales son las proyecciones de crecimiento de la empresa? </p>
-			<input type="text" name="crecimiento" class="form-control" placeholder="Ejem: Deseamos tener más de 100 campañas por semana." value="{{ old('crecimiento') }}">
-			@if( $errors->has('crecimiento') )
-			@foreach($errors->get('crecimiento') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Que se puede encontrar en la empresa? </p>
-			<input type="text" name="que_se_puede_encontrar" class="form-control" value="{{ old('que_se_puede_encontrar') }}">
-			@if( $errors->has('que_se_puede_encontrar') )
-			@foreach($errors->get('que_se_puede_encontrar') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Describe en 4 palabras las cualidades de la empresa: </p>
-			<input type="text" name="cualidades" class="form-control" placeholder="calidad, multitareas..." value="{{ old('cualidades') }}">
-			@if( $errors->has('cualidades') )
-			@foreach($errors->get('cualidades') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			<p>Comentarios extra: </p>
-			<input type="text" name="comentarios" class="form-control" value="{{ old('comentarios') }}">
-			@if( $errors->has('comentarios') )
-			@foreach($errors->get('comentarios') as $error)
-			<div style="color: red;">{{$error}}</div>
-			@endforeach
-			@endif
-
-			{{csrf_field()}}
-			<input type="submit" value="Guardar" >
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12-my-2 text-center">
+			<h1 class=" text-capitalize text-info">Crear nuevo dossier</h1>	
 		</div>
+		<div class="col-sm-12 my-2">
+			<form action="{{ route('proyecto.dossier.create') }}" method="POST">
+				{{csrf_field()}}
+				<div class="form-row">
+					<div class="col-sm-8 text-center mx-auto"> 
+						<label for="nombre" class="">Nombre de la empresa:</label>
+						<input id="nombre" type="text" class=" text-center form-control @if( $errors->has('nombre')) is-invalid @endif" name="nombre" value="{{ old('nombre') }}" required autofocus>
+						@foreach($errors->get('nombre') as $error)
+						<div class="invalid-feedback">
+							<strong> {{ $error }}</strong>
+						</div>
+						@endforeach
+					</div>
+				</div>
 
-	</form>
+				<div class="form-row my-3">
+					<div class="col-sm-6 text-center"> 
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="queEs" class="">Descripcion de la empresa:</label>
+							<input id="queEs" type="text" class=" text-center form-control @if( $errors->has('queEs')) is-invalid @endif" name="queEs" value="{{ old('queEs') }}" required>
+							@foreach($errors->get('queEs') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="publico" class="">Hacia que publico va dirigido?</label>
+							<input id="publico" type="text" class=" text-center form-control @if( $errors->has('publico')) is-invalid @endif" name="publico" value="{{ old('publico') }}" required>
+							@foreach($errors->get('publico') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-row my-3">
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="mision" class="">Mision de la empresa:</label>
+							<input id="mision" type="text" class=" text-center form-control @if( $errors->has('mision')) is-invalid @endif" name="mision" value="{{ old('mision') }}" required>
+							@foreach($errors->get('mision') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="vision" class="">Vision de la empresa:</label>
+							<input id="vision" type="text" class=" text-center form-control @if( $errors->has('vision')) is-invalid @endif" name="vision" value="{{ old('vision') }}" required>
+							@foreach($errors->get('vision') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+				</div>
+
+				<div class="form-row my-3">
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="valores" class="">Valores de la empresa:</label>
+							<input id="valores" type="text" class=" text-center form-control @if( $errors->has('valores')) is-invalid @endif" name="valores" value="{{ old('valores') }}" required>
+							@foreach($errors->get('valores') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="servicios" class="">Que servicios ofrece la empresa?</label>
+							<input id="servicios" type="text" class=" text-center form-control @if( $errors->has('servicios')) is-invalid @endif" name="servicios" value="{{ old('servicios') }}" required>
+							@foreach($errors->get('servicios') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-row my-3">
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="crecimiento" class="">Cuales son las proyecciones de crecimiento de la empresa? </label>
+							<input id="crecimiento" type="text" class=" text-center form-control @if( $errors->has('crecimiento')) is-invalid @endif" name="crecimiento" value="{{ old('crecimiento') }}" required>
+							@foreach($errors->get('crecimiento') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="que_se_puede_encontrar" class="">Que se puede encontrar en la empresa?</label>
+							<input id="que_se_puede_encontrar" type="text" class=" text-center form-control @if( $errors->has('que_se_puede_encontrar')) is-invalid @endif" name="que_se_puede_encontrar" value="{{ old('que_se_puede_encontrar') }}" required>
+							@foreach($errors->get('que_se_puede_encontrar') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-row my-3">
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="cualidades" class="">Describe en 4 palabras las cualidades de la empresa: </label>
+							<input id="cualidades" type="text" class=" text-center form-control @if( $errors->has('cualidades')) is-invalid @endif" name="cualidades" value="{{ old('cualidades') }}" required placeholder="calidad, multitareas...">
+							@foreach($errors->get('cualidades') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+
+					<div class="col-sm-6 text-center">
+						<div class="border border-secondary bg-light rounded p-2 m-2">
+							<label for="comentarios" class="">Comentarios extra:</label>
+							<input id="comentarios" type="text" class=" text-center form-control @if( $errors->has('comentarios')) is-invalid @endif" name="comentarios" value=" {{ old('comentarios') }}">
+							@foreach($errors->get('comentarios') as $error)
+							<div class="invalid-feedback">
+								<strong> {{ $error }}</strong>
+							</div>
+							@endforeach
+						</div>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="col-sm-12 mt-4">
+						<button class="btn-primary btn btn-lg ml-4" type="submit"> 
+							Crear.
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 @endsection

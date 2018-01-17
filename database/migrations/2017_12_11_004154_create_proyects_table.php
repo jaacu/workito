@@ -18,11 +18,13 @@ class CreateProyectsTable extends Migration
             $table->timestamps();
 
             $table->string('nombre');
-            $table->dateTime('fecha_limite')->nullable();
+            $table->dateTime('fecha_limite');
             // $table->time('restante')->nullable();
 
             $table->integer('user_id')->unsigned(); //El id del admin que creo el proyecto
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->boolean('terminado')->default(false);
         });
     }
 

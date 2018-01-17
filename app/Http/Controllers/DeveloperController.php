@@ -28,20 +28,28 @@ class DeveloperController extends Controller
 
 	public function proyecto($id){
 		$proyecto = Proyect::findOrFail($id);
+
 		$devs = $proyecto->devs;
 		
 		foreach ($devs as $dev) {
 
 			if( $dev->user->id == Auth::user()->id or Auth::user()->isAdmin() ){
+				session()->put( ['proyect_id' => $id]);
 				return view('dev.proyecto',[
 					'proyecto' => $proyecto,
 					'dev' => $dev,
 				]);
 			}
 		}
-
 		return redirect('/home')->withErrors('No estas asigando a este proyecto.');
-		
 	}
 
+	
+	public static function devsScript(){
+		if(session()->has('proyect_id')){
+			return ( session()->previousUrl() === route('dev.proyecto', session()->remove('proyect_id') ) );
+		} else {
+			return false;
+		}
+	}
 }

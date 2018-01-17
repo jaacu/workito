@@ -34,7 +34,8 @@ class GodLike
         if( $request->user()->role == $role ){
             return $next($request);    
         } 
-        return redirect('/home')->withErrors("NO TIENES LOS PERMISOS NECESARIOS PARA REALIZAR ESA ACCION.");
+        abort(403);
+        // return redirect('/home')->withErrors("NO TIENES LOS PERMISOS NECESARIOS PARA REALIZAR ESA ACCION.");
 
 
     }
