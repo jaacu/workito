@@ -8,15 +8,14 @@
 
 <script>
 export default{
-	props: ['user' , 'route'],
+	props: ['user'],
 	data() {
 		return {
 			notifications: []
 		}
 	},
 	mounted() {
-		console.log(this.route)
-		axios.get(this.route)
+		axios.get('api/notifications')
 		.then(response => {
 			this.notifications = response.data;
 
