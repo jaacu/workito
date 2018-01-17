@@ -83,7 +83,7 @@ class Proyect extends Model
 				break;
 				default:
 				abort(500);
-				return redirect('/home')->withErrors("El proyecto que intenta buscar no existe.");
+				return redirect(route('home'))->withErrors("El proyecto que intenta buscar no existe.");
 				break;
 			}
 			if( ! is_null($this->proyectoTipo) and ! $this->isCustom() ){

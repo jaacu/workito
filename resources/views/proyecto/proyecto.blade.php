@@ -81,11 +81,16 @@
 			</div>
 			@endif
 			@empty
-			<p>No hay desarrolladores asignados a este proyecto. <a href="/proyecto/reasignar/{{ $proyecto->id }}">Asignar ahora.</a></p>
+			<div class="col-sm-12">
+				<div class="alert alert-warning">
+					<h4 class="alert-heading">No hay desarrolladores asignados a este proyecto. <a href="{{ route('proyecto.reasignar' , $proyecto->id) }}" class="alert-link"> Asignar ahora.</a></h4>
+					<hr>
+				</div>	
+			</div>
 			@endforelse
 			@if ( Auth::user()->isAdmin() and $proyecto->isTerminado() )
 			<div class="col-sm-12">
-				<form action="/proyecto/delete/{{$proyecto->id}}" method="POST">
+				<form action="{{ route('proyecto.delete' , $proyecto->id) }}" method="POST">
 					{{ csrf_field() }}
 					<div class="mx-5 alert alert-danger">
 						<h3 class="alert-heading text-center">Eliminar Permanentemente el Proyecto.</h3>
