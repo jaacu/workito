@@ -49,7 +49,7 @@
                     <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Notificaciones <span class="caret"></span>
                     </a>
-                    <notifications :user="{{ Auth::user()->id }}"></notifications>
+                    <notifications :user="{{ Auth::user()->id }}" ></notifications>
                 </li>
                 @endif
             </ul>

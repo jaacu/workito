@@ -12,7 +12,7 @@
 			</div>	
 		</div>
 		<div class="col-sm-12 my-3">
-			<form action="/proyecto/delete/{{$proyecto->id}}" method="POST">
+			<form action="{{ route('proyecto.delete' , $proyecto->id) }}" method="POST">
 				{{ csrf_field() }}
 				<div class="form-row">
 					<div class="col-sm-12 text-center">

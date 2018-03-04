@@ -15,7 +15,7 @@ export default{
 		}
 	},
 	mounted() {
-		axios.get('api/notifications')
+		axios.get('/proyecto/api/notifications')
 		.then(response => {
 			this.notifications = response.data;
 
