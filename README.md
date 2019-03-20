@@ -31,3 +31,7 @@ Tambien incluye activacion de cuenta via email con firma digital de terminos y c
 ### Especificaciones
 
 Mi primero proyecto hecho con Laravel en la version 5.4 con boostrap 4.0
+
+## Demo
+
+<http://workito.herokuapp.com>
