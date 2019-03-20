@@ -53,7 +53,7 @@ class ProyectoEditado extends Notification implements ShouldQueue
         ->greeting('Hola, '.$notifiable->name)
         ->line($message)
         ->action('Ver proyecto.', url('/proyecto/show/'. $this->proyecto->id))
-        ->salutation('Leanga Software');
+        ->salutation('Workito Team');
     }
 
     /**

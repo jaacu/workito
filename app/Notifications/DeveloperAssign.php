@@ -49,7 +49,7 @@ class DeveloperAssign extends Notification implements ShouldQueue
         ->greeting('Hola, '.$notifiable->name)
         ->line('Has sido asignado al proyecto '. $this->proyecto->nombre . '.')
         ->action('Ver proyecto.', url('/proyecto/show/'. $this->proyecto->id))
-        ->salutation('Leanga Software');
+        ->salutation('Workito Team');
     }
 
     /**

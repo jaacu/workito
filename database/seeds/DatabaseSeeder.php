@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         $adminReal = User::create([
             'name' => 'Administrador',
             'email' => 'admin@admin.com',
-            'password' => bcrypt('Token.01'),
+            'password' => bcrypt('secret'),
             'NIF' => 'No se que es un NIF',
             'contacto' => 'Contacto',
             'cuentaSkype' => 'Cuenta de Skype',

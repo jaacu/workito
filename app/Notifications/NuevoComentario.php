@@ -51,7 +51,7 @@ class NuevoComentario extends Notification implements ShouldQueue
         ->greeting('Hola, '.$notifiable->name)
         ->line($this->other->name.' Ha hecho un nuevo comentario en el proyecto "'.$this->proyecto->nombre.'" del formas parte, te invitamos a revisarlo.')
         ->action('Ver proyecto.', url('/proyecto/show/'. $this->proyecto->id))
-        ->salutation('Leanga Software');
+        ->salutation('Workito Team');
     }
 
         /**

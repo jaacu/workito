@@ -30,7 +30,7 @@ class VerifiedMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('Bienvenido a Leanga Software')
+        return $this->subject('Bienvenido a Workito')
         ->view('emails.verificationCode')
         ->with([
             'name' => $this->user->name,
